@@ -12,9 +12,31 @@ Source for [radr314.github.io](https://radr314.github.io), a personal engineerin
 - `_drafts/` can be created locally for unpublished work.
 - `assets/writing/<article-slug>/` holds article-specific JavaScript, CSS, data, images, or WebGL shaders.
 
+## First-time setup on Ubuntu or WSL
+
+Install Ruby and the packages needed to build Ruby gems:
+
+```bash
+sudo apt-get update
+sudo apt-get install ruby-full build-essential zlib1g-dev
+```
+
+Keep installed gems in your user directory, then install Jekyll and Bundler:
+
+```bash
+echo '# Install Ruby gems in the user directory' >> ~/.bashrc
+echo 'export GEM_HOME="$HOME/gems"' >> ~/.bashrc
+echo 'export PATH="$HOME/gems/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+gem install jekyll bundler
+```
+
+You only need to complete this setup once.
+
 ## Run locally
 
-Install Ruby, Jekyll, and Bundler, then run:
+From the repository directory, install the versions specified by the site and
+start the local server:
 
 ```bash
 bundle install
@@ -70,5 +92,4 @@ styles:
 scripts:
   - /assets/writing/attention-explorer/main.js
 ```
-
 
