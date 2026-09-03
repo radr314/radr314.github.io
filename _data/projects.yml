@@ -1,0 +1,8 @@
+- title: HTTP Engine
+  category: Systems
+  status: Building
+  summary: >
+    Building an HTTP/1.1 server from raw TCP sockets to understand
+    parsing, connection lifecycles, concurrency, and failure handling.
+  repository: https://github.com/radr314/http-engine
+  writing: []
