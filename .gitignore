@@ -1,3 +1,10 @@
 *.ini
 __pycache__/
 uncomment.md
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+.bundle/
+vendor/
+Gemfile.lock

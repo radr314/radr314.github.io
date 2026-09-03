@@ -1,0 +1,40 @@
+---
+layout: default
+title: Writing
+description: Notes on software systems, machine learning, and ideas Randheer is working through.
+permalink: /writing/
+nav: writing
+body_class: writing-page
+---
+
+<section class="page-container page-container--reading">
+  <header class="page-header">
+    <p class="eyebrow">Notes and essays</p>
+    <h1>Writing</h1>
+    <p>
+      Notes on software systems, machine learning, and ideas I am working
+      through.
+    </p>
+  </header>
+
+  {% if site.posts.size > 0 %}
+    <ol class="writing-list">
+      {% for post in site.posts %}
+        <li class="writing-item">
+          <article>
+            <div class="writing-item__meta">
+              <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
+              {% if post.topics %}<span>{{ post.topics | join: " · " }}</span>{% endif %}
+            </div>
+            <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+            {% if post.description %}<p>{{ post.description }}</p>{% endif %}
+          </article>
+        </li>
+      {% endfor %}
+    </ol>
+  {% else %}
+    <div class="empty-state">
+      <p>No published writing yet.</p>
+    </div>
+  {% endif %}
+</section>
