@@ -1,0 +1,25 @@
+---
+layout: default
+title: Projects
+description: Systems, models, and experiments Randheer is currently building and studying.
+permalink: /projects/
+nav: projects
+body_class: projects-page
+---
+
+<section class="page-container">
+  <header class="page-header">
+    <p class="eyebrow">Work in progress</p>
+    <h1>Projects</h1>
+    <p>
+      Systems, models, and experiments I am building to understand software
+      and machine intelligence from first principles.
+    </p>
+  </header>
+
+  <div class="project-list">
+    {% for project in site.data.projects %}
+      {% include project-card.html project=project %}
+    {% endfor %}
+  </div>
+</section>

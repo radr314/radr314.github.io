@@ -1,0 +1,26 @@
+{% assign project = include.project %}
+{% assign related_posts = site.posts | where: "project", project.id %}
+
+<article class="project-card">
+  <div class="project-card__meta">
+    <span class="project-category">{{ project.category }}</span>
+    <span class="status-tag status-tag--{{ project.status | slugify }}">
+      {{ project.status }}
+    </span>
+  </div>
+
+  <h2>{{ project.title }}</h2>
+  <p>{{ project.summary }}</p>
+
+  {% if project.repository or related_posts.size > 0 %}
+    <div class="project-card__links">
+      {% if project.repository %}
+        <a href="{{ project.repository }}" rel="noopener noreferrer">View code <span aria-hidden="true">↗</span></a>
+      {% endif %}
+
+      {% if related_posts.size > 0 %}
+        <a href="{{ related_posts.first.url | relative_url }}">Related writing <span aria-hidden="true">→</span></a>
+      {% endif %}
+    </div>
+  {% endif %}
+</article>
