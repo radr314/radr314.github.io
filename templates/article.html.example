@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="ARTICLE_DESCRIPTION">
+
+    <title>ARTICLE_TITLE · Randheer Vennapureddy</title>
+    <link rel="canonical" href="https://radr314.github.io/writing/ARTICLE_SLUG/">
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <!-- Add an article-specific stylesheet here when needed. -->
+    <!-- <link rel="stylesheet" href="./styles.css"> -->
+    <script src="/assets/js/site.js" defer></script>
+  </head>
+
+  <body class="article-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href="/">Randheer Vennapureddy</a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="site-nav__link" href="/projects/">Projects</a>
+          <a class="site-nav__link is-active" href="/writing/" aria-current="page">Writing</a>
+          <a class="site-nav__link" href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">ARTICLE_TOPIC</p>
+          <h1>ARTICLE_TITLE</h1>
+          <p class="article-description">ARTICLE_DESCRIPTION</p>
+          <p class="article-date">
+            <time datetime="YYYY-MM-DD">MONTH D, YYYY</time>
+          </p>
+        </header>
+
+        <div class="article-content">
+          <p>Begin the article here.</p>
+
+          <h2>A section heading</h2>
+          <p>Add explanations, code, diagrams, and experiments as needed.</p>
+
+          <!--
+          Wide figures and interactive visualizations can break out of the
+          reading column with the visualization-wide class.
+
+          <figure class="visualization visualization-wide">
+            <canvas id="article-visualization" aria-label="Describe the visualization"></canvas>
+            <figcaption>Explain what the visualization demonstrates.</figcaption>
+          </figure>
+          -->
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>&copy; <span data-current-year>2026</span> Randheer Vennapureddy</p>
+      </div>
+    </footer>
+
+    <!-- Add article-specific JavaScript or WebGL here when needed. -->
+    <!-- <script type="module" src="./main.js"></script> -->
+  </body>
+</html>

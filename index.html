@@ -1,33 +1,69 @@
----
-layout: default
-title: Home
-description: Randheer Vennapureddy writes about software systems, machine learning, transformers, and reasoning models.
-body_class: home-page
----
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta
+      name="description"
+      content="Randheer Vennapureddy writes about software systems, machine learning, transformers, and reasoning models."
+    >
 
-<section class="home-hero" aria-labelledby="home-title">
-  <img
-    class="home-portrait"
-    src="{{ '/assets/images/profile.jpg' | relative_url }}"
-    alt="Portrait of Randheer Vennapureddy"
-    width="160"
-    height="160"
-  >
+    <title>Randheer Vennapureddy</title>
+    <link rel="canonical" href="https://radr314.github.io/">
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="/assets/js/site.js" defer></script>
+  </head>
 
-  <p class="eyebrow">Hi, I’m Randheer.</p>
+  <body class="home-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <h1 id="home-title">
-    Building software systems and machine intelligence from first principles.
-  </h1>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href="/">Randheer Vennapureddy</a>
 
-  <p class="home-introduction">
-    I’m a software and machine learning engineer. I use this site to document
-    systems I build, models and papers I study, and experiments that sharpen
-    how I think.
-  </p>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="site-nav__link" href="/projects/">Projects</a>
+          <a class="site-nav__link" href="/writing/">Writing</a>
+          <a class="site-nav__link" href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
 
-  <p class="currently">
-    <span>Currently exploring</span>
-    networked systems, transformers, and reasoning models.
-  </p>
-</section>
+    <main id="main-content">
+      <section class="home-hero" aria-labelledby="home-title">
+        <img
+          class="home-portrait"
+          src="/assets/images/profile.jpg"
+          alt="Portrait of Randheer Vennapureddy"
+          width="160"
+          height="160"
+        >
+
+        <p class="eyebrow">Hi, I’m Randheer.</p>
+
+        <h1 id="home-title">
+          Building software systems and machine intelligence from first principles.
+        </h1>
+
+        <p class="home-introduction">
+          I’m a software and machine learning engineer. I use this site to document
+          systems I build, models and papers I study, and experiments that sharpen
+          how I think.
+        </p>
+
+        <p class="currently">
+          <span>Currently exploring</span>
+          networked systems, transformers, and reasoning models.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>&copy; <span data-current-year>2026</span> Randheer Vennapureddy</p>
+      </div>
+    </footer>
+  </body>
+</html>
