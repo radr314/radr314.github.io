@@ -1,40 +1,57 @@
----
-layout: default
-title: Writing
-description: Notes on software systems, machine learning, and ideas Randheer is working through.
-permalink: /writing/
-nav: writing
-body_class: writing-page
----
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta
+      name="description"
+      content="Notes on software systems, machine learning, and ideas Randheer is working through."
+    >
 
-<section class="page-container page-container--reading">
-  <header class="page-header">
-    <p class="eyebrow">Notes and essays</p>
-    <h1>Writing</h1>
-    <p>
-      Notes on software systems, machine learning, and ideas I am working
-      through.
-    </p>
-  </header>
+    <title>Writing · Randheer Vennapureddy</title>
+    <link rel="canonical" href="https://radr314.github.io/writing/">
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="/assets/js/site.js" defer></script>
+  </head>
 
-  {% if site.posts.size > 0 %}
-    <ol class="writing-list">
-      {% for post in site.posts %}
-        <li class="writing-item">
-          <article>
-            <div class="writing-item__meta">
-              <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
-              {% if post.topics %}<span>{{ post.topics | join: " · " }}</span>{% endif %}
-            </div>
-            <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
-            {% if post.description %}<p>{{ post.description }}</p>{% endif %}
-          </article>
-        </li>
-      {% endfor %}
-    </ol>
-  {% else %}
-    <div class="empty-state">
-      <p>No published writing yet.</p>
-    </div>
-  {% endif %}
-</section>
+  <body class="writing-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href="/">Randheer Vennapureddy</a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="site-nav__link" href="/projects/">Projects</a>
+          <a class="site-nav__link is-active" href="/writing/" aria-current="page">Writing</a>
+          <a class="site-nav__link" href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="page-container page-container--reading">
+        <header class="page-header">
+          <p class="eyebrow">Notes and essays</p>
+          <h1>Writing</h1>
+          <p>
+            Notes on software systems, machine learning, and ideas I am working
+            through.
+          </p>
+        </header>
+
+        <div class="empty-state">
+          <p>No published writing yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>&copy; <span data-current-year>2026</span> Randheer Vennapureddy</p>
+      </div>
+    </footer>
+  </body>
+</html>

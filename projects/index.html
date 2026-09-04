@@ -1,25 +1,68 @@
----
-layout: default
-title: Projects
-description: Systems, models, and experiments Randheer is currently building and studying.
-permalink: /projects/
-nav: projects
-body_class: projects-page
----
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta
+      name="description"
+      content="Systems, models, and experiments Randheer is currently building and studying."
+    >
 
-<section class="page-container">
-  <header class="page-header">
-    <p class="eyebrow">Work in progress</p>
-    <h1>Projects</h1>
-    <p>
-      Systems, models, and experiments I am building to understand software
-      and machine intelligence from first principles.
-    </p>
-  </header>
+    <title>Projects · Randheer Vennapureddy</title>
+    <link rel="canonical" href="https://radr314.github.io/projects/">
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="/assets/js/site.js" defer></script>
+  </head>
 
-  <div class="project-list">
-    {% for project in site.data.projects %}
-      {% include project-card.html project=project %}
-    {% endfor %}
-  </div>
-</section>
+  <body class="projects-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href="/">Randheer Vennapureddy</a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="site-nav__link is-active" href="/projects/" aria-current="page">Projects</a>
+          <a class="site-nav__link" href="/writing/">Writing</a>
+          <a class="site-nav__link" href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="page-container">
+        <header class="page-header">
+          <p class="eyebrow">Work in progress</p>
+          <h1>Projects</h1>
+          <p>
+            Systems, models, and experiments I am building to understand software
+            and machine intelligence from first principles.
+          </p>
+        </header>
+
+        <div class="project-list">
+          <article class="project-card">
+            <div class="project-card__meta">
+              <span class="project-category">Systems</span>
+              <span class="status-tag status-tag--building">Building</span>
+            </div>
+
+            <h2>HTTP Engine</h2>
+            <p>
+              Building an HTTP/1.1 server from raw TCP sockets to understand
+              parsing, connection lifecycles, concurrency, and failure handling.
+            </p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>&copy; <span data-current-year>2026</span> Randheer Vennapureddy</p>
+      </div>
+    </footer>
+  </body>
+</html>
