@@ -14,7 +14,9 @@ framework, package manager, dependency installation, or build step.
 ├── projects/
 │   └── index.html
 ├── writing/
-│   └── index.html
+│   ├── index.html
+│   └── video-steganography/
+│       └── index.html
 ├── about/
 │   └── index.html
 ├── templates/
@@ -40,7 +42,7 @@ python3 -m http.server 8000
 On Windows:
 
 ```powershell
-python -m http.server 8000
+py -m http.server 8000 --bind 127.0.0.1
 ```
 
 Open <http://127.0.0.1:8000>.
@@ -53,6 +55,35 @@ Available pages:
 - <http://127.0.0.1:8000/about/>
 
 Stop the server with `Ctrl+C`.
+
+## How the local server command works
+
+Opening `index.html` directly uses a `file:///` URL. In that mode, a path such
+as `/assets/css/main.css` is resolved from the root of the drive instead of the
+root of this repository. Serving the directory over HTTP gives those
+root-relative URLs the same meaning they have on GitHub Pages.
+
+The Windows command can be read one part at a time:
+
+- `py` starts the Windows Python launcher.
+- `-m` tells Python to run a module as a program.
+- `http.server` is Python's built-in basic static-file server.
+- `8000` is the local TCP port used by the server.
+- `--bind 127.0.0.1` limits access to the current computer.
+
+Run from the repository root, the server maps URLs to files like this:
+
+| URL | File |
+| --- | --- |
+| `/` | `index.html` |
+| `/projects/` | `projects/index.html` |
+| `/assets/css/main.css` | `assets/css/main.css` |
+| `/assets/images/profile.jpg` | `assets/images/profile.jpg` |
+
+The server only delivers files. The browser parses the HTML, applies the CSS,
+loads images, and runs JavaScript. It does not modify, compile, or deploy the
+site. Python's `http.server` is intended for local development, not production
+hosting.
 
 ## Write an article locally
 
