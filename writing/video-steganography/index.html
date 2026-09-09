@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta
+      name="description"
+      content="A retrospective on a MATLAB video-steganography prototype combining object tracking, DWT and DCT embedding, and error-correction experiments."
+    >
+
+    <title>Hiding Messages in Moving Video Objects · Randheer Vennapureddy</title>
+    <link rel="canonical" href="https://radr314.github.io/writing/video-steganography/">
+    <link rel="icon" href="/assets/images/favicon.ico">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <script src="/assets/js/site.js" defer></script>
+  </head>
+
+  <body class="article-page">
+    <a class="skip-link" href="#main-content">Skip to content</a>
+
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href="/">Randheer Vennapureddy</a>
+
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a class="site-nav__link" href="/projects/">Projects</a>
+          <a class="site-nav__link is-active" href="/writing/" aria-current="page">Writing</a>
+          <a class="site-nav__link" href="/about/">About</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <article class="article">
+        <header class="article-header">
+          <p class="eyebrow">Computer Vision · Signal Processing</p>
+          <h1>Hiding Messages in Moving Video Objects</h1>
+          <p class="article-description">
+            Revisiting my bachelor&rsquo;s final project: object tracking,
+            transform-domain embedding, error correction, and what I would
+            redesign today.
+          </p>
+          <p class="article-date">
+            <time datetime="2026-09-09">September 9, 2026</time>
+          </p>
+        </header>
+
+        <div class="article-content">
+          <p>
+            During my bachelor&rsquo;s degree, I worked on a video-steganography
+            prototype in MATLAB. The central idea was to hide a message inside
+            the visual content of a video while keeping the change difficult to
+            notice. Rather than treating every pixel in every frame as an equal
+            carrier, the design first identifies moving objects and then uses a
+            tracked object region for transform-domain embedding.
+          </p>
+
+          <p>
+            Revisiting the repository years later is useful for two reasons. It
+            connects ideas from computer vision, signal processing, coding
+            theory, and video processing in one pipeline. It also shows the
+            difference between demonstrating individual algorithms and
+            integrating them into a reproducible end-to-end system.
+          </p>
+
+          <p>
+            The complete source is available in the
+            <a
+              href="https://github.com/radr314/video-steganography"
+              target="_blank"
+              rel="noopener noreferrer"
+            >video-steganography repository</a>.
+          </p>
+
+          <h2>The problem the project explored</h2>
+
+          <p>
+            Cryptography makes a message unreadable without a key.
+            Steganography addresses a different problem: concealing that a
+            message is present at all. A media file can act as the carrier, but
+            changing it creates a tradeoff among three goals:
+          </p>
+
+          <ul>
+            <li><strong>Imperceptibility:</strong> the modified video should look close to the original.</li>
+            <li><strong>Capacity:</strong> the carrier should hold a useful amount of information.</li>
+            <li><strong>Robustness:</strong> the message should survive noise, compression, or other changes.</li>
+          </ul>
+
+          <p>
+            My prototype explored this tradeoff by selecting a moving region,
+            encoding the payload, and modifying frequency coefficients instead
+            of directly replacing visible pixel values.
+          </p>
+
+          <h2>How the repository is organized</h2>
+
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Code</th>
+                <th scope="col">Responsibility</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>main.m</code></td>
+                <td>Orchestrates frame loading, region selection, payload preparation, embedding, video writing, and recovery experiments.</td>
+              </tr>
+              <tr>
+                <td><code>mot_track.m</code></td>
+                <td>Detects foreground objects and maintains multiple tracks with Kalman filters.</td>
+              </tr>
+              <tr>
+                <td><code>Data_Extracting_Stage.m</code></td>
+                <td>Processes the output video, records bounding boxes, and experiments with recovery-side tracking.</td>
+              </tr>
+              <tr>
+                <td><code>sec_Msg.m</code></td>
+                <td>Converts text to bits and applies key-mixing and error-coding experiments.</td>
+              </tr>
+              <tr>
+                <td><code>embedded_DWT.m</code></td>
+                <td>Embeds data by modifying coefficients from a two-dimensional Haar wavelet transform.</td>
+              </tr>
+              <tr>
+                <td><code>wtmark.m</code> and <code>exwmark.m</code></td>
+                <td>Embed and recover a binary watermark through block-based discrete cosine transforms.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2>1. Finding a carrier with object tracking</h2>
+
+          <p>
+            The tracking path begins with a Gaussian-mixture foreground
+            detector. Each frame is converted into a binary foreground mask,
+            after which morphological opening removes small noise, closing joins
+            nearby foreground regions, and hole filling produces more coherent
+            shapes. Blob analysis then returns the centroid and bounding box of
+            each sufficiently large region.
+          </p>
+
+          <p>
+            In <code>mot_track.m</code>, every active track stores an identifier,
+            a bounding box, a Kalman filter, its age, and visibility counters.
+            The code predicts where each object should appear in the next frame,
+            computes assignment costs between predictions and new detections,
+            updates matched tracks, creates tracks for unmatched detections, and
+            removes tracks that remain invisible for too long. Short-lived
+            detections are excluded from the displayed reliable tracks.
+          </p>
+
+          <p>
+            This tracking layer provides the conceptual link between ordinary
+            image watermarking and video steganography: a stable bounding box
+            can identify the same potential carrier as it moves through the
+            scene. In <code>main.m</code>, precomputed bounding boxes from
+            <code>a1.mat</code> are used to crop regions from a sequence of
+            frames before embedding begins.
+          </p>
+
+          <h2>2. Turning a message into an embeddable payload</h2>
+
+          <p>
+            <code>sec_Msg.m</code> trims the input text, converts each character
+            to an eight-bit representation, and flattens the result into a bit
+            vector. The bits are grouped in blocks of four and passed through a
+            Hamming (7,4) encoder, which adds redundant bits so that a
+            single-bit error in a codeword can be corrected. The encoded values
+            are then mixed with a generated key through XOR operations before
+            being returned to the embedding functions.
+          </p>
+
+          <p>
+            The file also constructs BCH-related objects, but the resulting BCH
+            codeword is not connected to the value returned by the function.
+            The most precise description of the implemented payload path is
+            therefore Hamming coding plus experimental key mixing, with BCH
+            present as an unfinished experiment.
+          </p>
+
+          <p>
+            The comments in the original code use the word
+            <em>encryption</em>. The XOR-based operations should not be treated
+            as modern cryptographic protection. A production design would first
+            use an authenticated encryption scheme with explicit key management,
+            and then apply error correction to the resulting ciphertext.
+          </p>
+
+          <h2>3. The Haar DWT embedding path</h2>
+
+          <p>
+            <code>embedded_DWT.m</code> applies a two-dimensional Haar discrete
+            wavelet transform to the selected image region. The transform splits
+            the image into four coefficient bands: <code>LL</code>,
+            <code>LH</code>, <code>HL</code>, and <code>HH</code>. These describe
+            low-frequency image structure and horizontal, vertical, and diagonal
+            detail at the selected scale.
+          </p>
+
+          <p>
+            The prototype selects the <code>LL</code> band, reshapes its
+            coefficients, and adjusts them using a three-bit quantization
+            pattern derived from the payload. It then performs an inverse wavelet
+            transform with the unchanged detail bands to reconstruct the spatial
+            image. Embedding in a low-frequency band can improve persistence,
+            but changes there can also be more visually noticeable. That choice
+            is therefore part of the robustness-versus-imperceptibility tradeoff
+            that should be measured experimentally.
+          </p>
+
+          <h2>4. The block DCT embedding path</h2>
+
+          <p>
+            <code>wtmark.m</code> explores a separate frequency-domain method.
+            It converts the carrier to grayscale, resizes it to 512 by 512
+            pixels, divides the transformed image into 8 by 8 blocks, and
+            resizes the binary watermark to 32 by 32 values. One watermark bit
+            is represented in each of the first 1,024 blocks by adding or
+            subtracting 35 from the coefficient at position (8,8).
+          </p>
+
+          <p>
+            After modifying the coefficients, the function performs the inverse
+            block transform and calculates the peak signal-to-noise ratio between
+            the original and embedded images. <code>exwmark.m</code> reverses
+            the process by transforming the blocks again, reading the sign of
+            the same coefficient, and reconstructing the 32 by 32 watermark.
+          </p>
+
+          <p>
+            This branch captures a classic watermarking idea: lower-frequency
+            coefficients tend to be more robust but more visible, while
+            high-frequency coefficients tend to be less visible but more
+            vulnerable to compression and noise. The hard-coded coefficient and
+            strength provide a starting point for experiments rather than a
+            universally optimal setting.
+          </p>
+
+          <h2>5. Where the prototype stops short of end-to-end integration</h2>
+
+          <p>
+            The most important finding from rereading the code is that the
+            individual stages are not fully connected in the checked-in version.
+            <code>main.m</code> computes DWT and DCT embedded regions, but the
+            video-writing loop writes the original values from
+            <code>images</code>. It does not paste either transformed region back
+            into its tracked bounding box before creating
+            <code>myStego.avi</code>. The later recovery code consequently mixes
+            video-processing experiments with recovery performed against
+            in-memory transformed data.
+          </p>
+
+          <p>
+            The repository also expects local inputs such as
+            <code>View_001</code>, <code>a1.mat</code>, and a
+            <code>subfile</code> directory that are not checked in. Some helper
+            paths are incomplete, and several APIs, including
+            <code>blkproc</code> and <code>im2bw</code>, reflect the MATLAB
+            version used at the time. The repository is therefore best read as
+            a bachelor&rsquo;s research prototype containing working algorithmic
+            components, not as a turnkey steganography package.
+          </p>
+
+          <h2>How I would rebuild it today</h2>
+
+          <p>
+            I would preserve the original research question while making the
+            boundaries between stages explicit and testable:
+          </p>
+
+          <ol>
+            <li>Decode the video and attach frame numbers and timestamps to every frame.</li>
+            <li>Detect and track candidate objects, then select tracks using duration, size, texture, and motion stability.</li>
+            <li>Frame the payload with a version, length, checksum, and deterministic error-correcting code.</li>
+            <li>Encrypt the payload with authenticated encryption when confidentiality is required.</li>
+            <li>Embed bits across selected transform coefficients and record the exact capacity used.</li>
+            <li>Paste each modified region back into its original frame before encoding the output video.</li>
+            <li>Run extraction independently from the produced file, without sharing in-memory embedding state.</li>
+            <li>Measure PSNR, SSIM, payload bit-error rate, and recovery after compression, noise, resizing, and dropped frames.</li>
+          </ol>
+
+          <p>
+            I would also replace fixed frame and bounding-box indices with
+            configuration, seed every randomized operation for reproducible
+            experiments, retain intermediate artifacts, and add tests for each
+            transform and encode/decode round trip. A small command-line
+            interface could then connect the stages without hiding their
+            parameters.
+          </p>
+
+          <h2>What I take from the project now</h2>
+
+          <p>
+            This project was an early attempt to combine several technical
+            domains inside one system. The most valuable lesson is that an
+            algorithm working in isolation is only one part of engineering.
+            Data contracts between stages, reproducible inputs, evaluation
+            metrics, and independent end-to-end tests determine whether the
+            complete system works.
+          </p>
+
+          <p>
+            That lesson still shapes how I approach software and machine-learning
+            systems today: understand each component deeply, but validate the
+            behavior at the boundaries where those components meet.
+          </p>
+
+          <p>
+            <a
+              class="text-link"
+              href="https://github.com/radr314/video-steganography"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Explore the MATLAB source code on GitHub &nearr;</a>
+          </p>
+        </div>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <p>&copy; <span data-current-year>2026</span> Randheer Vennapureddy</p>
+      </div>
+    </footer>
+  </body>
+</html>
